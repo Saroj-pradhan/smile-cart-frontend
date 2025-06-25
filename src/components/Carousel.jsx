@@ -1,29 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Button } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { Left, Right } from "neetoicons";
 
 const Carousel = ({ title, imageUrls }) => {
+  const timerRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const resetTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(handelNext, 3000);
+  };
+
   const handelNext = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % imageUrls.length);
   };
 
   const handelPrevious = () => {
+    resetTimer();
     setCurrentIndex(
       prevIndex => (prevIndex - 1 + imageUrls.length) % imageUrls.length
     );
   };
 
   useEffect(() => {
-    const timer = setInterval(
-      () => setCurrentIndex(prevIndex => (prevIndex + 1) % imageUrls.length),
-      3000
-    );
+    timerRef.current = setInterval(handelNext, 3000);
 
     return () => {
-      clearInterval(timer);
+      clearInterval(timerRef.current);
     };
   }, []);
 
@@ -45,7 +49,10 @@ const Carousel = ({ title, imageUrls }) => {
           className="shrink-0 focus-within:ring-0 hover:bg-transparent"
           icon={Right}
           style="text"
-          onClick={() => handelNext()}
+          onClick={() => {
+            handelNext();
+            resetTimer();
+          }}
         />
       </div>
       <div className="mt-2 flex space-x-1">
@@ -56,7 +63,10 @@ const Carousel = ({ title, imageUrls }) => {
               "neeto-ui-border-black neeto-ui-rounded-full h-3 w-3 cursor-pointer border",
               { "neeto-ui-bg-black": index === currentIndex }
             )}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              setCurrentIndex(index);
+              resetTimer();
+            }}
           />
         ))}
       </div>
