@@ -7,14 +7,13 @@ import { Left, Right } from "neetoicons";
 const Carousel = ({ title, imageUrls }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const handelNext = () => {
-    const nextIndex = (currentIndex + 1) % imageUrls.length;
-    setCurrentIndex(nextIndex);
+    setCurrentIndex(prevIndex => (prevIndex + 1) % imageUrls.length);
   };
 
   const handelPrevious = () => {
-    const previousIndex =
-      (currentIndex - 1 + imageUrls.length) % imageUrls.length;
-    setCurrentIndex(previousIndex);
+    setCurrentIndex(
+      prevIndex => (prevIndex - 1 + imageUrls.length) % imageUrls.length
+    );
   };
 
   return (
