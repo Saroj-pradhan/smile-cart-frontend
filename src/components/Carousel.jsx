@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Button } from "@bigbinary/neetoui";
 import classNames from "classnames";
@@ -15,6 +15,17 @@ const Carousel = ({ title, imageUrls }) => {
       prevIndex => (prevIndex - 1 + imageUrls.length) % imageUrls.length
     );
   };
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setCurrentIndex(prevIndex => (prevIndex + 1) % imageUrls.length),
+      3000
+    );
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col items-center ">
