@@ -13,7 +13,7 @@ const Product = () => {
   const fetchProduct = async () => {
     try {
       const product = await productsApi.show();
-      // console.log(res.data);
+      console.log(product);
       setProduct(product);
     } catch (error) {
       console.log(error);
@@ -33,9 +33,8 @@ const Product = () => {
     );
   }
 
-  const { name, image_urls, image_url, mrp, description, offer_price } =
-    product;
-  const discountedPrice = mrp - offer_price;
+  const { name, mrp, description, offerPrice, imageUrls, imageUrl } = product;
+  const discountedPrice = mrp - offerPrice;
   const discountedPercentage = ((discountedPrice / mrp) * 100).toFixed(1);
 
   return (
@@ -49,13 +48,13 @@ const Product = () => {
       <div className="mt-16 flex gap-4">
         <div className="w-2/5">
           <div className="flex justify-center gap-16">
-            {isNotNil(image_urls) ? (
+            {isNotNil(imageUrls) ? (
               <Carousel
-                imageUrls={append(image_url, image_urls)}
+                imageUrls={append(imageUrl, imageUrls)}
                 title="Infinix Inbook"
               />
             ) : (
-              <img alt={name} className="w-48" src={image_url} />
+              <img alt={name} className="w-48" src={imageUrl} />
             )}
           </div>
         </div>
@@ -63,7 +62,7 @@ const Product = () => {
           <Typography component="p">{description}</Typography>
           <Typography component="p"> MRP: {mrp}</Typography>
           <Typography component="p" weight="semibold">
-            Offer price: {product.offer_price}
+            Offer price: {product.offerPrice}
           </Typography>
           <Typography
             className="text-green-300"
