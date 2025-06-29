@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 
-import { Spinner } from "@bigbinary/neetoui";
+import { Header, PageNotFound, PageLoader } from "components/commons";
 import { Typography } from "neetoui";
 import { isNotNil, append } from "ramda";
+import { useParams } from "react-router-dom";
 
-import productsApi from "./apis/products";
 import Carousel from "./Carousel";
 
+import productsApi from "../apis/products";
+
 const Product = () => {
+  const [isError, setIsError] = useState(false);
   const [product, setProduct] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const { slug } = useParams();
+
   const fetchProduct = async () => {
     try {
-      const product = await productsApi.show();
+      const product = await productsApi.show(slug);
       console.log(product);
       setProduct(product);
     } catch (error) {
+      setIsError(true);
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -27,22 +33,26 @@ const Product = () => {
   }, []);
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full  items-center justify-center">
-        <Spinner />
-      </div>
+      // <div className="flex h-screen w-full  items-center justify-center">
+      //   <Spinner />
+      // </div>
+      <PageLoader />
     );
   }
 
+  if (isError) return <PageNotFound />;
   const { name, mrp, description, offerPrice, imageUrls, imageUrl } = product;
   const discountedPrice = mrp - offerPrice;
   const discountedPercentage = ((discountedPrice / mrp) * 100).toFixed(1);
 
   return (
     <div className="px-6 pb-6">
-      <div>
-        <Typography component="p" style="h1">
-          {name}
-        </Typography>
+      <div className="flex items-center">
+        {/* <LeftArrow
+          className="hover:neeto-ui-bg-gray-400 neeto-ui-rounded-full mr-6"
+          onClick={history.goBack}
+        /> */}
+        <Header title={name} />
         <hr className="border-2 border-black" />
       </div>
       <div className="mt-16 flex gap-4">
