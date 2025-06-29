@@ -2,6 +2,7 @@ import PageNotFound from "components/PageNotFound";
 import Product from "components/Product/index";
 import ProductList from "components/ProductList/index";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
+import routes from "routes";
 
 import "./App.css";
 // eslint-disable-next-line import/extensions
@@ -17,9 +18,9 @@ const App = () => (
       </NavLink>
     </div>
     <Switch>
-      <Route exact component={ProductList} path="/products" />
-      <Route exact component={Product} path="/products/:slug" />
-      <Redirect exact from="/" to="/products" />
+      <Route exact component={Product} path={routes.products.show} />
+      <Route exact component={ProductList} path={routes.products.index} />
+      <Redirect exact from={routes.root} to={routes.products.index} />
       <Route component={PageNotFound} path="*" />
     </Switch>
   </>
